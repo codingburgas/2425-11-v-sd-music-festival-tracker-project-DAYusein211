@@ -1,11 +1,15 @@
-﻿using FestivalApp.DAL.Models;
+﻿using FestivalApp.DAL;
+using FestivalApp.DAL.Models;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
 namespace FestivalApp.BLL
 {
-    public class FestivalService : IFestivalService
+    public class FestivalService
     {
-        private readonly IAppDbContext _context;
+        private readonly AppDbContext _context;
 
-        public FestivalService(IAppDbContext context)
+        public FestivalService(AppDbContext context)
         {
             _context = context;
         }
