@@ -1,0 +1,108 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;600&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+/* 2) Navbar styling */
+.navbar {
+    width: 100%;
+    top:2rem;
+    /* If you want a background color: background-color: #fff; */
+}
+
+/* Center the navbar content within a max width */
+.navbar-inner {
+    max-width: 1200px;      /* or whatever width you prefer */
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+   
+}
+
+/* Left nav items (Artists, Festivals, Pricing, Near Me) */
+.nav-left {
+    display: flex;
+    gap: 1.5rem;
+}
+
+/* Right nav item (Sign In) */
+.nav-right {
+    position: fixed;
+    top: 2rem;
+    
+    right: 3rem;
+}
+
+
+/* Individual nav link styles */
+.nav-item {
+    text-decoration: none;
+    color: #747474;
+    font-weight: 400;       /* normal weight for nav links */
+}
+
+.nav-item:hover {
+    color: #414141;         /* Orange hover color */
+}
+
+.sign-in {
+    font-weight: 500; 
+    color:#414141;
+}
+.sign-in:hover {
+    color: #000000;
+}
+/* 3) Hero container */
+.hero-container {
+    color:#414141;
+    max-width: 900px;
+    margin: 15rem auto 5rem auto; 
+    text-align: center;
+    padding: 0 1rem;       
+}
+
+/* Large, bold heading in Montserrat */
+.hero-container h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 3.4rem;     
+    margin-bottom: 1.2rem;
+    line-height: 1.2;
+}
+
+/* Highlight "Perfect" in orange */
+.highlight {
+    color: #FF7F2D;
+}
+
+/* Subheading text below the main heading */
+.hero-subtitle {
+    font-size: 1.25rem;     /* ~20px, tweak as you like */
+    color: #747474;            /* softer gray text */
+    line-height: 1.6;
+    font-weight: 500;
+    margin-bottom: 2.5rem;
+}
+
+
+.cta-button {
+    font-family: 'Poppins', sans-serif;
+    background-color: #414141;
+    color: #fff;
+    padding: 0.8rem 1.8rem;     
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;       
+    transition: background-color 0.2s;
+}
+
+.cta-button:hover {
+    background-color: #333;
+}

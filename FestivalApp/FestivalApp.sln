@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FestivalApp_PLL", "FestivalApp_PLL\FestivalApp_PLL.csproj", "{AA2C62B1-D817-49D6-A135-866A5F648C13}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FestivalApp_BLL", "FestivalApp_BLL\FestivalApp_BLL.csproj", "{7E8CF6A3-E6CB-49BB-ACA2-2C97057BBD8F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FestivalApp_DAL", "FestivalApp_DAL\FestivalApp_DAL.csproj", "{158DB721-E620-442A-BB57-FE50D9257DA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FestivalApp_PL", "FestivalApp_PL\FestivalApp_PL.csproj", "{478DD60C-346E-4D6D-AE07-11B4E8134185}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,10 +12,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AA2C62B1-D817-49D6-A135-866A5F648C13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA2C62B1-D817-49D6-A135-866A5F648C13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA2C62B1-D817-49D6-A135-866A5F648C13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA2C62B1-D817-49D6-A135-866A5F648C13}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E8CF6A3-E6CB-49BB-ACA2-2C97057BBD8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7E8CF6A3-E6CB-49BB-ACA2-2C97057BBD8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E8CF6A3-E6CB-49BB-ACA2-2C97057BBD8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -24,5 +20,9 @@ Global
 		{158DB721-E620-442A-BB57-FE50D9257DA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{158DB721-E620-442A-BB57-FE50D9257DA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{158DB721-E620-442A-BB57-FE50D9257DA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{478DD60C-346E-4D6D-AE07-11B4E8134185}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{478DD60C-346E-4D6D-AE07-11B4E8134185}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{478DD60C-346E-4D6D-AE07-11B4E8134185}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{478DD60C-346E-4D6D-AE07-11B4E8134185}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
