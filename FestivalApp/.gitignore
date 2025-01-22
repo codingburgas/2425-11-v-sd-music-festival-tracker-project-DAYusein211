@@ -1,0 +1,29 @@
+## Ignore the build output folders
+bin/
+obj/
+
+## User-specific files
+.idea/
+.vscode/
+
+## Windows installer files
+Thumbs.db
+ehthumbs.db
+
+## JetBrains Rider/Visual Studio for Mac
+.idea/
+
+## .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+## NPM packages
+node_modules/
+
+## Logs
+*.log
+*.vspscc
