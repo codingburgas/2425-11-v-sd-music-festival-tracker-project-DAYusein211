@@ -1,32 +1,8 @@
 ﻿@page "/"
 
-
-<nav class="navbar">
-    <div class="navbar-inner">
-        <div class="nav-left">
-            <NavLink class="nav-item" href="/artists">Artists</NavLink>
-            <NavLink class="nav-item" href="/festivals">Festivals</NavLink>
-            <NavLink class="nav-item" href="/pricing">Pricing</NavLink>
-            <NavLink class="nav-item" href="/near-me">Near Me</NavLink>
-        </div>
-        <div class="nav-right">
-            <NavLink class="nav-item sign-in" href="/signin">Sign In</NavLink>
-        </div>
-    </div>
-</nav>
+@inject NavigationManager Navigation  
 
 <!-- Hero section -->
-<div class="hero-container">
-    <!-- ...rest of your hero markup... -->
-</div>
-
-
-<div class="hero-container">
-    <!-- Hero section here -->
-</div>
-
-
-
 <div class="hero-container">
     <h1>
         Plan Your <span class="highlight">Perfect</span> Festival Day!
@@ -35,14 +11,12 @@
         Discover your favorite artists, customize your schedule,<br />
         and explore the festival map—all in one place.
     </p>
-    <button class="cta-button">Get started</button>
+    <button class="cta-button" @onclick="NavigateToSignIn">Get started</button>
 </div>
 
 @code {
-    // You could handle the "Get started" button by adding @onclick or other logic here, 
-    // for example, to navigate or show a modal:
-    // private void OnGetStartedClick()
-    // {
-    //     NavigationManager.NavigateTo("/signup");
-    // }
+    private void NavigateToSignIn()
+    {
+        Navigation.NavigateTo("/signin");
+    }
 }
