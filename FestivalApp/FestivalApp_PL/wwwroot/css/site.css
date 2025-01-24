@@ -11,48 +11,8 @@ article.content.px-4{
     padding: 0 !important;
 }
 
-/* 2) Navbar styling */
-.navbar {
-    width: 100%;
-    top:2rem;
-    /* If you want a background color: background-color: #fff; */
-}
-
-/* Center the navbar content within a max width */
-.navbar-inner {
-    max-width: 1200px;      /* or whatever width you prefer */
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-   
-}
-
-/* Left nav items (Artists, Festivals, Pricing, Near Me) */
-.nav-left {
-    display: flex;
-    gap: 1.5rem;
-}
-
-/* Right nav item (Sign In) */
-.nav-right {
-    position: fixed;
-    top: 2rem;
-    
-    right: 3rem;
-}
 
 
-/* Individual nav link styles */
-.nav-item {
-    text-decoration: none;
-    color: #747474;
-    font-weight: 400;       /* normal weight for nav links */
-}
-
-.nav-item:hover {
-    color: #414141;         /* Orange hover color */
-}
 
 .sign-in {
     font-weight: 500; 
@@ -65,7 +25,7 @@ article.content.px-4{
 .hero-container {
     color:#414141;
     max-width: 900px;
-    margin: 15rem auto 5rem auto; 
+   
     text-align: center;
     padding: 0 1rem;       
 }
