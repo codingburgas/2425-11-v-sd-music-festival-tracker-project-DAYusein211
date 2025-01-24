@@ -56,6 +56,60 @@
     private string errorMessage = string.Empty;
     private bool isValidEmail = true;
 
+=======
+<div class="sign-in-container">
+    <img class = "lines" src="/images/background.svg" alt="lines">
+        <div class="signin-card">
+            <h2 class="title">Sign In</h2>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label class="label" for="email">Email</label>
+                <input id="email"
+                       class="input-field"
+                       placeholder="example@gmail.com"
+                       type="email"
+                       @bind="loginModel.Email"/>
+            </div>
+
+            <!-- Password Field + Toggle -->
+            <div class="form-group password-group">
+                <label class="label" for="password">Password</label>
+                <div class="password-input-wrapper">
+                    <input id="password"
+                           class="input-field password-field"
+                           placeholder="********"
+                           type="@passwordFieldType"
+                           @bind="loginModel.Password"/>
+
+                    <!-- Eye Icon toggles between open/closed -->
+                    <span class="toggle-visibility" @onclick="TogglePassword">
+                        <img src="@CurrentEyeIcon" alt="Show/hide"/>
+                    </span>
+                </div>
+
+                <a href="#" class="forgot-password-link">Forgot password?</a>
+            </div>
+
+            <!-- Sign In Button -->
+            <button class="signin-btn" @onclick="OnSignIn">Sign In</button>
+
+            <!-- Sign Up Link -->
+            <p class="signup-prompt">
+                Don’t have an account?
+                <a href="/signup">Create now</a>
+            </p>
+        </div>
+    
+</div>
+@code {
+    private LoginModel loginModel = new();
+
+    private bool showPassword;
+    private string passwordFieldType = "password";
+
+    // Return one icon if showPassword == false, the other if true
+
     private string CurrentEyeIcon => showPassword
         ? "/icons/closed-eye-icon.svg"
         : "/icons/eye-icon.svg";
@@ -89,6 +143,9 @@
         errorMessage = "";
 
         // TODO: Implement sign-in logic (API call, authentication, etc.)
+    private void OnSignIn()
+    {
+        // Your sign-in logic here
     }
 
     private class LoginModel
