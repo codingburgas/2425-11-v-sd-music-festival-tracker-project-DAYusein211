@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\FestivalApp_PL.props" />
+</Project>

@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FestivalApp_DAL", "Festival
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FestivalApp_PL", "FestivalApp_PL\FestivalApp_PL.csproj", "{478DD60C-346E-4D6D-AE07-11B4E8134185}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FestivalApp_API", "FestivalApp_API\FestivalApp_API.csproj", "{DE83186D-DFEA-43F3-92E7-1BD59F20C29B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{478DD60C-346E-4D6D-AE07-11B4E8134185}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{478DD60C-346E-4D6D-AE07-11B4E8134185}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{478DD60C-346E-4D6D-AE07-11B4E8134185}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE83186D-DFEA-43F3-92E7-1BD59F20C29B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE83186D-DFEA-43F3-92E7-1BD59F20C29B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE83186D-DFEA-43F3-92E7-1BD59F20C29B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE83186D-DFEA-43F3-92E7-1BD59F20C29B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

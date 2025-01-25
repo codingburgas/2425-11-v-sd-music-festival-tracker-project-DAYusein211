@@ -1,0 +1,16 @@
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\bin\Debug\net8.0\FestivalApp_BLL.deps.json
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\bin\Debug\net8.0\FestivalApp_BLL.dll
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\bin\Debug\net8.0\FestivalApp_BLL.pdb
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\bin\Debug\net8.0\FestivalApp_DAL.dll
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\bin\Debug\net8.0\FestivalApp_DAL.pdb
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\FestivalApp_BLL.csproj.AssemblyReference.cache
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\FestivalApp_BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\FestivalApp_BLL.AssemblyInfoInputs.cache
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\FestivalApp_BLL.AssemblyInfo.cs
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\FestivalApp_BLL.csproj.CoreCompileInputs.cache
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\FestivalApp_BLL.sourcelink.json
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\Festival.577C1805.Up2Date
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\FestivalApp_BLL.dll
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\refint\FestivalApp_BLL.dll
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\FestivalApp_BLL.pdb
+C:\Users\alide\RiderProjects\2425-11-v-sd-music-festival-tracker-project-DAYusein211\FestivalApp\FestivalApp_BLL\obj\Debug\net8.0\ref\FestivalApp_BLL.dll
