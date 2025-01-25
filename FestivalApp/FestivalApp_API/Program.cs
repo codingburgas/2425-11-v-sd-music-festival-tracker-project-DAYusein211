@@ -3,23 +3,30 @@ using FestivalApp_DAL.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure DbContext with correct migrations assembly
+// ✅ Connect to existing Azure database (No migrations needed)
 builder.Services.AddDbContext<FestivalDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly(typeof(FestivalDbContext).Assembly.FullName))); // 👈 Fix migration reference
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        policy => policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
 var app = builder.Build();
 
-// Enable Swagger UI
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Ensure correct routing
 app.UseRouting();
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthorization();
 app.MapControllers();

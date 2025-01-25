@@ -33,10 +33,39 @@ namespace FestivalApp_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Guest>> PostGuest(Guest guest)
         {
-            _context.Guests.Add(guest);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetGuest), new { id = guest.Id }, guest);
+            Console.WriteLine($"Received Guest Registration: {guest.Email}");
+
+            if (guest == null || string.IsNullOrWhiteSpace(guest.Email))
+            {
+                Console.WriteLine("Invalid guest data received.");
+                return BadRequest("Invalid guest data.");
+            }
+
+            // Check if the email already exists
+            var existingGuest = await _context.Guests.FirstOrDefaultAsync(g => g.Email == guest.Email);
+            if (existingGuest != null)
+            {
+                Console.WriteLine($"Guest with email {guest.Email} already exists.");
+                return Conflict("User with this email already exists.");
+            }
+
+            try
+            {
+                guest.PasswordHash = BCrypt.Net.BCrypt.HashPassword(guest.PasswordHash);
+                _context.Guests.Add(guest);
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine($"Guest {guest.Email} registered successfully.");
+                return CreatedAtAction(nameof(GetGuest), new { id = guest.Id }, guest);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding guest: {ex.Message}");
+                return StatusCode(500, "An error occurred while registering the guest.");
+            }
         }
+
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutGuest(int id, Guest guest)

@@ -33,10 +33,38 @@ namespace FestivalApp_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Artist>> PostArtist(Artist artist)
         {
-            _context.Artists.Add(artist);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetArtist), new { id = artist.Id }, artist);
+            Console.WriteLine($"Received Artist Registration: {artist.Email}");
+
+            if (artist == null || string.IsNullOrWhiteSpace(artist.Email))
+            {
+                Console.WriteLine("Invalid artist data received.");
+                return BadRequest("Invalid artist data.");
+            }
+
+            // Check if the email already exists
+            var existingArtist = await _context.Artists.FirstOrDefaultAsync(a => a.Email == artist.Email);
+            if (existingArtist != null)
+            {
+                Console.WriteLine($"Artist with email {artist.Email} already exists.");
+                return Conflict("User with this email already exists.");
+            }
+
+            try
+            {
+                artist.PasswordHash = BCrypt.Net.BCrypt.HashPassword(artist.PasswordHash);
+                _context.Artists.Add(artist);
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine($"Artist {artist.Email} registered successfully.");
+                return CreatedAtAction(nameof(GetArtist), new { id = artist.Id }, artist);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding artist: {ex.Message}");
+                return StatusCode(500, "An error occurred while registering the artist.");
+            }
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutArtist(int id, Artist artist)

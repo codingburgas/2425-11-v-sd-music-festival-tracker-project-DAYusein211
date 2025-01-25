@@ -1,18 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using FestivalApp_DAL.Models;
+﻿using FestivalApp_DAL.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace FestivalApp_DAL.Contexts
 {
     public class FestivalDbContext : DbContext
     {
-        public FestivalDbContext(DbContextOptions<FestivalDbContext> options) : base(options) { }
+        private readonly IConfiguration _configuration;
+
+        public FestivalDbContext(DbContextOptions<FestivalDbContext> options, IConfiguration configuration)
+            : base(options)
+        {
+            _configuration = configuration;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=tcp:festival-server.database.windows.net,1433;Initial Catalog=FestivalDB;Persist Security Info=False;User ID=sqladmin;Password=Denis999@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
-                    b => b.MigrationsAssembly("FestivalApp_API")); // 👈 Add this line
+                string connectionString = _configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 

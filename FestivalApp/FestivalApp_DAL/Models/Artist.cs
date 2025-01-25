@@ -1,4 +1,7 @@
-﻿namespace FestivalApp_DAL.Models
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace FestivalApp_DAL.Models
 {
     public class Artist
     {
@@ -7,6 +10,11 @@
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
-        public float Rating { get; set; } = 0;
+
+        [Column(TypeName = "float")]
+        public double Rating { get; set; }  // ✅ Ensure consistency with RatingValue
+
+        // Relationships
+        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
     }
 }

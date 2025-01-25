@@ -15,4 +15,8 @@
       <Folder Include="wwwroot\icons\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\FestivalApp_BLL\FestivalApp_BLL.csproj" />
+    </ItemGroup>
+
 </Project>

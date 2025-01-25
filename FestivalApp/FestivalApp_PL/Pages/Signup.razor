@@ -13,7 +13,7 @@
                        class="input-field"
                        placeholder="Denis"
                        type="text"
-                       @bind="signupModel.FirstName" />
+                       @bind="firstName" />
             </div>
             <div class="form-group half-width">
                 <label class="label" for="lastName">Last name</label>
@@ -21,7 +21,7 @@
                        class="input-field"
                        placeholder="Yusein"
                        type="text"
-                       @bind="signupModel.LastName" />
+                       @bind="lastName" />
             </div>
         </div>
 
@@ -32,7 +32,7 @@
                    class="input-field"
                    placeholder="example@gmail.com"
                    type="email"
-                   @bind="signupModel.Email"
+                   @bind="email"
                    @oninput="ValidateEmail" />
         </div>
 
@@ -44,7 +44,7 @@
                        class="input-field password-field"
                        placeholder="********"
                        type="@passwordFieldType"
-                       @bind="signupModel.Password"
+                       @bind="password"
                        @oninput="ValidatePassword" />
 
                 <span class="toggle-visibility" @onclick="TogglePassword">
@@ -54,7 +54,7 @@
 
             <!-- Password Warning (Appears Below the Input) -->
             <p class="password-requirement"
-               style="display: @(signupModel.Password.Length > 0 && signupModel.Password.Length < 8 ? "block" : "none")">
+               style="display: @(password.Length > 0 && password.Length < 8 ? "block" : "none")">
                 • Must be at least 8 characters
             </p>
         </div>
@@ -67,9 +67,9 @@
         <!-- Register As -->
         <p class="register-as-label">Register as</p>
         <div class="register-options">
-            <button class="register-btn" @onclick="() => OnRegisterRoleSelected(Role.Guest)">Guest</button>
+            <button class="register-btn" @onclick='() => RegisterUser("Guest")'>Guest</button>
             <span class="or-text">or</span>
-            <button class="register-btn" @onclick="() => OnRegisterRoleSelected(Role.Artist)">Artist</button>
+            <button class="register-btn" @onclick='() => RegisterUser("Artist")'>Artist</button>
         </div>
 
         <p class="signup-prompt">
@@ -80,16 +80,23 @@
 </div>
 
 @code {
-    private SignUpModel signupModel = new();
-    private bool showPassword;
-    private string passwordFieldType = "password";
+    private string firstName = string.Empty;
+    private string lastName = string.Empty;
+    private string email = string.Empty;
+    private string password = string.Empty;
     private bool showErrors;
     private string errorMessage = string.Empty;
+    private bool showPassword;
+    private string passwordFieldType = "password";
     private bool isValidEmail = true;
+    private HttpClient httpClient = new();
 
-    private string CurrentEyeIcon => showPassword
-        ? "/icons/closed-eye-icon.svg"
-        : "/icons/eye-icon.svg";
+    private string CurrentEyeIcon => showPassword ? "/icons/closed-eye-icon.svg" : "/icons/eye-icon.svg";
+
+    protected override void OnInitialized()
+    {
+        httpClient.BaseAddress = new Uri("http://localhost:5238/api/"); // Ensure this matches your API URL
+    }
 
     private void TogglePassword()
     {
@@ -99,53 +106,75 @@
 
     private void ValidateEmail(ChangeEventArgs e)
     {
-        string email = e.Value?.ToString() ?? string.Empty;
+        email = e.Value?.ToString() ?? string.Empty;
         isValidEmail = System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
     }
 
     private void ValidatePassword(ChangeEventArgs e)
     {
-        signupModel.Password = e.Value?.ToString() ?? string.Empty;
-        StateHasChanged(); // Ensure UI updates on every input change
+        password = e.Value?.ToString() ?? string.Empty;
+        StateHasChanged(); // Ensures UI updates on every input change
     }
 
-    private void OnRegisterRoleSelected(Role role)
+    private async Task RegisterUser(string role)
     {
-        signupModel.SelectedRole = role;
+        Console.WriteLine($"Attempting to register as {role}...");
 
-        // Check if required fields are empty
-        if (string.IsNullOrWhiteSpace(signupModel.FirstName) ||
-            string.IsNullOrWhiteSpace(signupModel.LastName) ||
-            string.IsNullOrWhiteSpace(signupModel.Email) ||
-            string.IsNullOrWhiteSpace(signupModel.Password) ||
-            !isValidEmail ||
-            signupModel.Password.Length < 8)
+        if (string.IsNullOrWhiteSpace(firstName) ||
+            string.IsNullOrWhiteSpace(lastName) ||
+            string.IsNullOrWhiteSpace(email) ||
+            string.IsNullOrWhiteSpace(password) ||
+            password.Length < 8 ||
+            !isValidEmail)
         {
             showErrors = true;
             errorMessage = "Fields are empty or invalid.";
+            Console.WriteLine("Validation failed.");
             return;
         }
 
-        // If all fields are valid, hide error message
         showErrors = false;
         errorMessage = "";
 
-        // Sign-up logic (e.g., API call)
+        var userData = new
+        {
+            FirstName = firstName,
+            LastName = lastName,
+            Email = email,
+            PasswordHash = password
+        };
+
+        string endpoint = role == "Guest" ? "Guests" : "Artists";
+        Console.WriteLine($"Sending request to: {httpClient.BaseAddress}{endpoint}");
+
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync(endpoint, userData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"{role} registered successfully!");
+                errorMessage = $"{role} registered successfully!";
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Conflict) // 409 Conflict
+            {
+                showErrors = true;
+                errorMessage = "User with this email already exists.";
+                Console.WriteLine("Registration failed: User already exists.");
+            }
+            else
+            {
+                showErrors = true;
+                errorMessage = $"Error registering user: {await response.Content.ReadAsStringAsync()}";
+                Console.WriteLine($"Registration failed: {await response.Content.ReadAsStringAsync()}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error occurred: {ex.Message}");
+            showErrors = true;
+            errorMessage = "An error occurred while registering.";
+        }
     }
 
-    private class SignUpModel
-    {
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public Role SelectedRole { get; set; }
-    }
-
-    private enum Role
-    {
-        None,
-        Guest,
-        Artist
-    }
 }
