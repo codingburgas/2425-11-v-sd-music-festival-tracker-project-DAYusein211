@@ -1,4 +1,8 @@
 ﻿@page "/signin"
+@using Blazored.LocalStorage
+@inject NavigationManager Navigation
+@inject HttpClient httpClient
+@inject ILocalStorageService LocalStorage
 
 <div class="sign-in-container">
     <img class="lines" src="/images/background.svg" alt="lines" />
@@ -12,7 +16,7 @@
                    class="input-field"
                    placeholder="example@gmail.com"
                    type="email"
-                   @bind="loginModel.Email"
+                   @bind="email"
                    @oninput="ValidateEmail" />
         </div>
 
@@ -24,7 +28,7 @@
                        class="input-field password-field"
                        placeholder="********"
                        type="@passwordFieldType"
-                       @bind="loginModel.Password" />
+                       @bind="password" />
 
                 <span class="toggle-visibility" @onclick="TogglePassword">
                     <img src="@CurrentEyeIcon" alt="Show/hide"/>
@@ -32,7 +36,7 @@
             </div>
         </div>
 
-        <!-- Error Message Box (Same as Sign-Up Page) -->
+        <!-- Error Message Box -->
         <div class="error-box" style="display: @(showErrors ? "block" : "none")">
             <p>@errorMessage</p>
         </div>
@@ -49,51 +53,83 @@
 </div>
 
 @code {
-private LoginModel loginModel = new();
-private bool showPassword;
-private string passwordFieldType = "password";
-private bool showErrors;
-private string errorMessage = string.Empty;
-private bool isValidEmail = true;
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private bool showErrors;
+    private string errorMessage = string.Empty;
+    private bool showPassword;
+    private string passwordFieldType = "password";
+    private bool isValidEmail = true;
 
-private string CurrentEyeIcon => showPassword
-? "/icons/closed-eye-icon.svg"
-: "/icons/eye-icon.svg";
+    private string CurrentEyeIcon => showPassword ? "/icons/closed-eye-icon.svg" : "/icons/eye-icon.svg";
 
-private void TogglePassword()
-{
-showPassword = !showPassword;
-passwordFieldType = showPassword ? "text" : "password";
-}
+    private void TogglePassword()
+    {
+        showPassword = !showPassword;
+        passwordFieldType = showPassword ? "text" : "password";
+    }
 
-private void ValidateEmail(ChangeEventArgs e)
-{
-string email = e.Value?.ToString() ?? string.Empty;
-isValidEmail = System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-}
+    private void ValidateEmail(ChangeEventArgs e)
+    {
+        email = e.Value?.ToString() ?? string.Empty;
+        isValidEmail = System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+    }
 
-private void OnSignIn()
-{
-// Check for empty fields or invalid email
-if (string.IsNullOrWhiteSpace(loginModel.Email) ||
-string.IsNullOrWhiteSpace(loginModel.Password) ||
-!isValidEmail)
-{
-showErrors = true;
-errorMessage = "Fields are empty or invalid.";
-return;
-}
+    private async Task OnSignIn()
+    {
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password) || !isValidEmail)
+        {
+            showErrors = true;
+            errorMessage = "Fields are empty or invalid.";
+            return;
+        }
 
-// Hide error messages when validation passes
-showErrors = false;
-errorMessage = "";
+        showErrors = false;
+        errorMessage = "";
 
-// TODO: Implement sign-in logic (API call, authentication, etc.)
-}
+        var loginData = new { Email = email, Password = password };
 
-private class LoginModel
-{
-public string Email { get; set; } = string.Empty;
-public string Password { get; set; } = string.Empty;
-}
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync(" http://localhost:5238/api/auth/login", loginData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var user = await response.Content.ReadFromJsonAsync<UserInfo>();
+
+                await LocalStorage.SetItemAsync("loggedInUser", user);
+                Console.WriteLine($"Login successful: {user.Email}");
+
+                // Navigate to home page
+                Navigation.NavigateTo("/", forceLoad: true);
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                showErrors = true;
+                errorMessage = "Invalid email or password.";
+            }
+            else
+            {
+                showErrors = true;
+                errorMessage = $"Login error: {await response.Content.ReadAsStringAsync()}";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error occurred: {ex.Message}");
+            showErrors = true;
+            errorMessage = "An error occurred while signing in.";
+        }
+    }
+
+
+
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty; // Guest or Artist
+    }
 }

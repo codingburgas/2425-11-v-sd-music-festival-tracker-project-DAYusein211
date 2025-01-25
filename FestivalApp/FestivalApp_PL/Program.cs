@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-
+using Blazored.LocalStorage;
 namespace FestivalApp_PL;
 
 public class Program
@@ -8,6 +8,7 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.Services.AddBlazoredLocalStorage();
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
