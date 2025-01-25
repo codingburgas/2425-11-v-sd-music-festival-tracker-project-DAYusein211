@@ -1,0 +1,113 @@
+﻿@page "/profile"
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<!-- Background container -->
+<div class="sign-in-container">
+    <div class="lines" ><div class = "circle-bg"></div></div>
+
+    <div class="signin-card">
+        <div class="header-container with-rating">
+            <h2 class="title">@role</h2>
+            @if (role == "Artist")
+            {
+                <div class="rating-container">
+                    <img src="/icons/star.svg" alt="Rating" class="star-icon"/>
+                    <span class="rating-value">@rating.ToString("0.0")/5</span>
+                </div>
+            }
+        </div>
+
+        <!-- First Name & Last Name -->
+        <div class="form-row">
+            <div class="form-group half-width">
+                <label class="label" for="firstName">First name</label>
+                <input id="firstName" class="input-field" type="text" @bind="firstName" disabled />
+            </div>
+            <div class="form-group half-width">
+                <label class="label" for="lastName">Last name</label>
+                <input id="lastName" class="input-field" type="text" @bind="lastName" disabled />
+            </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+            <label class="label" for="email">Email</label>
+            <input id="email" class="input-field" type="email" @bind="email" disabled />
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group password-group">
+            <label class="label" for="password">Password</label>
+            <div class="password-input-wrapper">
+                <input id="password" class="input-field password-field" type="@passwordFieldType" 
+                       value="@DisplayPassword" readonly />
+                <span class="toggle-visibility" @onclick="TogglePassword">
+                    <img src="@CurrentEyeIcon" alt="Show/hide"/>
+                </span>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+            <button class="back-btn" @onclick="GoBack">Go Back</button>
+            <button class="logout-btn" @onclick="Logout">Log Out</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string firstName = "";
+    private string lastName = "";
+    private string email = "";
+    private string role = "";
+    private double rating = 0;
+    private bool showPassword = false;
+    private string password = "";
+    
+    private string passwordFieldType => showPassword ? "text" : "password";
+    private string DisplayPassword => showPassword ? password : "***********"; // Show real password when toggled
+    
+    private string CurrentEyeIcon => showPassword ? "/icons/closed-eye-icon.svg" : "/icons/eye-icon.svg";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await LocalStorage.GetItemAsync<UserInfo>("loggedInUser");
+        if (user != null)
+        {
+            firstName = user.FirstName;
+            lastName = user.LastName;
+            email = user.Email;
+            role = user.Role;
+            rating = user.Rating ?? 0; // Only Artists have ratings
+            password = user.Password; // Retrieve actual password
+        }
+    }
+
+    private void TogglePassword()
+    {
+        showPassword = !showPassword;
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("loggedInUser");
+        Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty; // Ensure password is stored
+        public string Role { get; set; } = string.Empty;
+        public double? Rating { get; set; } // Nullable for Guests
+    }
+}

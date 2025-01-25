@@ -5,7 +5,7 @@
 @inject ILocalStorageService LocalStorage
 
 <div class="sign-in-container">
-    <img class="lines" src="/images/background.svg" alt="lines" />
+    <div class="lines" ><div class = "circle-bg"></div></div>
     <div class="signin-card">
         <h2 class="title">Sign In</h2>
 
@@ -77,50 +77,44 @@
 
     private async Task OnSignIn()
     {
-        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password) || !isValidEmail)
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
             showErrors = true;
-            errorMessage = "Fields are empty or invalid.";
+            errorMessage = "Email and password are required.";
             return;
         }
 
-        showErrors = false;
-        errorMessage = "";
-
         var loginData = new { Email = email, Password = password };
+        var response = await httpClient.PostAsJsonAsync("http://localhost:5238/api/auth/login", loginData);
 
-        try
+        if (response.IsSuccessStatusCode)
         {
-            var response = await httpClient.PostAsJsonAsync(" http://localhost:5238/api/auth/login", loginData);
+            var userInfo = await response.Content.ReadFromJsonAsync<UserInfo>();
 
-            if (response.IsSuccessStatusCode)
+            if (userInfo != null)
             {
-                var user = await response.Content.ReadFromJsonAsync<UserInfo>();
+                // Store user details INCLUDING the entered password
+                await LocalStorage.SetItemAsync("loggedInUser", new UserInfo
+                {
+                    Id = userInfo.Id,
+                    FirstName = userInfo.FirstName,
+                    LastName = userInfo.LastName,
+                    Email = userInfo.Email,
+                    Role = userInfo.Role,
+                    Rating = userInfo.Rating,
+                    Password = password // Store the entered password
+                });
 
-                await LocalStorage.SetItemAsync("loggedInUser", user);
-                Console.WriteLine($"Login successful: {user.Email}");
-
-                // Navigate to home page
                 Navigation.NavigateTo("/", forceLoad: true);
             }
-            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                showErrors = true;
-                errorMessage = "Invalid email or password.";
-            }
-            else
-            {
-                showErrors = true;
-                errorMessage = $"Login error: {await response.Content.ReadAsStringAsync()}";
-            }
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine($"Error occurred: {ex.Message}");
             showErrors = true;
-            errorMessage = "An error occurred while signing in.";
+            errorMessage = "Invalid email or password.";
         }
     }
+
 
 
 
@@ -131,5 +125,7 @@
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty; // Guest or Artist
+        public object Rating { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace FestivalApp_API.Controllers
             _context = context;
         }
 
-        [HttpPost("login")] // ✅ Make sure this is correctly defined
+        [HttpPost("login")]
         public async Task<ActionResult<UserInfo>> Login([FromBody] LoginRequest request)
         {
             Console.WriteLine($"Login attempt: {request.Email}");
@@ -24,15 +24,13 @@ namespace FestivalApp_API.Controllers
             var guest = await _context.Guests.FirstOrDefaultAsync(g => g.Email == request.Email);
             var artist = await _context.Artists.FirstOrDefaultAsync(a => a.Email == request.Email);
 
-            var user = guest ?? (object)artist; // Check both tables
-
-            if (user == null)
+            if (guest == null && artist == null)
             {
                 Console.WriteLine("User not found.");
                 return Unauthorized("Invalid email or password.");
             }
 
-            var storedPasswordHash = user is Guest g ? g.PasswordHash : ((Artist)user).PasswordHash;
+            var storedPasswordHash = guest != null ? guest.PasswordHash : artist.PasswordHash;
 
             if (!BCrypt.Net.BCrypt.Verify(request.Password, storedPasswordHash))
             {
@@ -42,16 +40,42 @@ namespace FestivalApp_API.Controllers
 
             var response = new UserInfo
             {
-                Id = user is Guest ? ((Guest)user).Id : ((Artist)user).Id,
-                FirstName = user is Guest ? ((Guest)user).FirstName : ((Artist)user).FirstName,
-                LastName = user is Guest ? ((Guest)user).LastName : ((Artist)user).LastName,
+                Id = guest != null ? guest.Id : artist.Id,
+                FirstName = guest != null ? guest.FirstName : artist.FirstName,
+                LastName = guest != null ? guest.LastName : artist.LastName,
                 Email = request.Email,
-                Role = user is Guest ? "Guest" : "Artist",
-                Rating = user is Artist ? ((Artist)user).Rating : null // Only Artists have a rating
+                Role = guest != null ? "Guest" : "Artist",
+                Rating = artist != null ? artist.Rating : null // Only Artists have a rating
             };
 
             Console.WriteLine($"Login successful: {response.Email}");
-            return Ok(response);
+            return Ok(new
+            {
+                Id = guest != null ? guest.Id : artist.Id,
+                FirstName = guest != null ? guest.FirstName : artist.FirstName,
+                LastName = guest != null ? guest.LastName : artist.LastName,
+                Email = request.Email,
+                Role = guest != null ? "Guest" : "Artist",
+                Rating = artist != null ? artist.Rating : 0, // Only Artists have ratings
+                Password = request.Password // Store the entered password for the profile page
+            });
+
         }
+    }
+
+    public class LoginRequest
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+
+    public class UserInfo
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public double? Rating { get; set; } // Nullable for Guests
     }
 }

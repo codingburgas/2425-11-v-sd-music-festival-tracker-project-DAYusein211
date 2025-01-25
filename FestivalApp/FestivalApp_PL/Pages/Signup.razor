@@ -1,7 +1,9 @@
 ﻿@page "/signup"
+@inject NavigationManager Navigation
+
 
 <div class="sign-in-container">
-    <img class="lines" src="/images/background.svg" alt="lines" />
+    <div class="lines" ><div class = "circle-bg"></div></div>
     <div class="signin-card">
         <h2 class="title">Sign Up</h2>
 
@@ -155,6 +157,10 @@
             {
                 Console.WriteLine($"{role} registered successfully!");
                 errorMessage = $"{role} registered successfully!";
+                await Task.Delay(2000);
+
+                // Navigate to Sign-In Page
+                Navigation.NavigateTo("/signin", forceLoad: true);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Conflict) // 409 Conflict
             {

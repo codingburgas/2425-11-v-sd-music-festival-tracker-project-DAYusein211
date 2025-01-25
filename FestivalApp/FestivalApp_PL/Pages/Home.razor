@@ -1,79 +1,17 @@
 ﻿@page "/"
 
 @inject NavigationManager Navigation
-@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
-<!-- Hero section -->
-<div class="d-flex justify-content-center align-items-center vw-100 vh-100">
-    <div class="hero-container">
-        <h1>
-            Plan Your <span class="highlight">Perfect</span> Festival Day!
-        </h1>
-        <p class="hero-subtitle">
-            Discover your favorite artists, customize your schedule,<br />
-            and explore the festival map—all in one place.
-        </p>
-        <button class="cta-button" @onclick="NavigateToSignIn">Get started</button>
-
-        <!-- Display Logged-in User Info -->
-        @if (!string.IsNullOrEmpty(email))
-        {
-            <div class="user-info">
-                <h3>Logged in as:</h3>
-                <p><strong>First Name:</strong> @firstName</p>
-                <p><strong>Last Name:</strong> @lastName</p>
-                <p><strong>Email:</strong> @email</p>
-                <p><strong>Role:</strong> @role</p>
-
-                @if (role == "Artist")
-                {
-                    <p><strong>Rating:</strong> @rating</p>
-                }
-
-                <button class="logout-button" @onclick="Logout">Logout</button>
-            </div>
-        }
-    </div>
+<!-- Fullscreen container -->
+<div class="fullscreen-container">
+    <div class="lines" ><div class = "circle-bg"></div></div>
+    <p class="quote">"Where words fail, music speaks." - Hans Christian Andersen</p>
+    <button class="cta-button" @onclick="NavigateToSignIn">Get started</button>
 </div>
 
 @code {
-    private string firstName = "";
-    private string lastName = "";
-    private string email = "";
-    private string role = "";
-    private double rating = 0;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var user = await LocalStorage.GetItemAsync<UserInfo>("loggedInUser");
-        if (user != null)
-        {
-            firstName = user.FirstName;
-            lastName = user.LastName;
-            email = user.Email;
-            role = user.Role;
-            rating = user.Rating ?? 0; // Only Artists have a rating
-        }
-    }
-
     private void NavigateToSignIn()
     {
         Navigation.NavigateTo("/signin");
-    }
-
-    private async Task Logout()
-    {
-        await LocalStorage.RemoveItemAsync("loggedInUser");
-        Navigation.NavigateTo("/signin", forceLoad: true);
-    }
-
-    private class UserInfo
-    {
-        public int Id { get; set; }
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;
-        public double? Rating { get; set; } // Nullable for Guests
     }
 }
