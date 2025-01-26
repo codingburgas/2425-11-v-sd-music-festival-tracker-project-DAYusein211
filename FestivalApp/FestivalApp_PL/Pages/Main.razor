@@ -6,13 +6,17 @@
     <nav class="main-navbar">
         <div class="main-nav-links">
             <a href="/profile" class="main-nav-link">Profile</a>
-            <a href="/concerts" class="main-nav-link">Concerts</a>
-            <a href="/transactions" class="main-nav-link">Transactions</a>
+
+            @if (userRole != "Artist") // Hide Concerts and Transactions for Artists
+            {
+                <a href="/concerts" class="main-nav-link">Concerts</a>
+                <a href="/transactions" class="main-nav-link">Transactions</a>
+            }
         </div>
 
         @if (userRole == "Artist")
         {
-            <button class="main-arrange-btn">+ Arrange</button>
+            <button class="main-arrange-btn" @onclick="NavigateToArrange">+ Arrange</button>
         }
     </nav>
 
@@ -40,6 +44,11 @@
         {
             userRole = user.Role; // Get user role (Guest or Artist)
         }
+    }
+
+    private void NavigateToArrange()
+    {
+        Navigation.NavigateTo("/arrange");
     }
 
     private class UserInfo

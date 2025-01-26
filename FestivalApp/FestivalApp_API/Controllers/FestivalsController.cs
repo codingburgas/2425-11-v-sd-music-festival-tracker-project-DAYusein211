@@ -17,28 +17,66 @@ namespace FestivalApp_API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Festival>>> GetFestivals()
+        public async Task<ActionResult<IEnumerable<object>>> GetFestivals()
         {
             var festivals = await _context.Festivals
-                .Include(f => f.Artist) // Include artist details
+                .Join(_context.Artists,
+                    festival => festival.ArtistId,
+                    artist => artist.Id,
+                    (festival, artist) => new
+                    {
+                        festival.Id,
+                        festival.Name,
+                        festival.Description,
+                        festival.Location,
+                        festival.Date,
+                        festival.ArtistId,
+                        ArtistName = artist.FirstName + " " + artist.LastName,  // Fetch full name
+                        ArtistRating = artist.Rating  // Fetch artist rating
+                    })
                 .ToListAsync();
 
             return Ok(festivals);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Festival>> GetFestival(int id)
+        public async Task<ActionResult<object>> GetFestival(int id)
         {
-            var festival = await _context.Festivals.FindAsync(id);
+            var festival = await _context.Festivals
+                .Join(_context.Artists,
+                    f => f.ArtistId,
+                    a => a.Id,
+                    (f, a) => new
+                    {
+                        f.Id,
+                        f.Name,
+                        f.Description,
+                        f.Location,
+                        f.Date,
+                        f.ArtistId,
+                        ArtistName = a.FirstName + " " + a.LastName,
+                        ArtistRating = a.Rating
+                    })
+                .FirstOrDefaultAsync(f => f.Id == id);
+
             if (festival == null) return NotFound();
-            return festival;
+
+            return Ok(festival);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Festival>> PostFestival(Festival festival)
+        public async Task<ActionResult<Festival>> PostFestival([FromBody] Festival festival)
         {
+            // 🔥 Ensure the artist exists
+            var artistExists = await _context.Artists.AnyAsync(a => a.Id == festival.ArtistId);
+            if (!artistExists)
+            {
+                return BadRequest("Artist not found.");
+            }
+
             _context.Festivals.Add(festival);
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetFestival), new { id = festival.Id }, festival);
         }
 
@@ -46,8 +84,10 @@ namespace FestivalApp_API.Controllers
         public async Task<IActionResult> PutFestival(int id, Festival festival)
         {
             if (id != festival.Id) return BadRequest();
+
             _context.Entry(festival).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
 
@@ -56,8 +96,10 @@ namespace FestivalApp_API.Controllers
         {
             var festival = await _context.Festivals.FindAsync(id);
             if (festival == null) return NotFound();
+
             _context.Festivals.Remove(festival);
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }

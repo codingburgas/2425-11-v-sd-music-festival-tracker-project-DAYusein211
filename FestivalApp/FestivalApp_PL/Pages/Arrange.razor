@@ -1,0 +1,132 @@
+﻿@page "/arrange"
+@using FestivalApp_DAL.Models
+@inject NavigationManager Navigation
+@inject HttpClient httpClient
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<div class="sign-in-container">
+    <div class="lines user-select-none"><div class="circle-bg"></div></div>
+    <div class="arrange-form-card">
+        <h2 class="arrange-title">Arrange Festival</h2>
+
+        <div class="arrange-form-group">
+            <label class="arrange-label" for="festivalDate">Date</label>
+            <input id="festivalDate" type="date" class="arrange-input" @bind="festivalDate" />
+        </div>
+
+        <div class="arrange-form-row">
+            <div class="arrange-form-group half-width">
+                <label class="arrange-label" for="country">Country</label>
+                <input id="country" class="arrange-input" type="text" @bind="country" placeholder="USA" />
+            </div>
+            <div class="arrange-form-group half-width">
+                <label class="arrange-label" for="city">City</label>
+                <input id="city" class="arrange-input" type="text" @bind="city" placeholder="New York" />
+            </div>
+        </div>
+
+        <div class="arrange-form-group">
+            <label class="arrange-label" for="price">Price</label>
+            <input id="price" class="arrange-input" type="number" min="1" @bind="price" placeholder="Enter price" />
+        </div>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <p class="error-box">@errorMessage</p>
+        }
+
+        <div class="arrange-button-group">
+            <button class="arrange-back-btn" @onclick="GoBack">Go back</button>
+            <button class="arrange-btn" @onclick="SubmitFestival" disabled="@isSubmitting">
+                @(isSubmitting ? "Submitting..." : "Arrange")
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private DateTime festivalDate = DateTime.Today;
+    private string country = "";
+    private string city = "";
+    private decimal price = 0;
+    private int artistId;
+    private string errorMessage = "";
+    private bool isSubmitting = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await LocalStorage.GetItemAsync<UserInfo>("loggedInUser");
+
+        if (user == null || user.Role != "Artist")
+        {
+            Navigation.NavigateTo("/signin", forceLoad: true);
+        }
+        else
+        {
+            artistId = user.Id;
+            Console.WriteLine($"Artist ID Retrieved from LocalStorage: {artistId}");
+        }
+    }
+
+    private async Task SubmitFestival()
+    {
+        if (string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || price <= 0)
+        {
+            errorMessage = "Please fill out all fields correctly.";
+            return;
+        }
+
+        if (artistId == 0)
+        {
+            errorMessage = "Artist ID is missing. Please log in again.";
+            return;
+        }
+
+        isSubmitting = true;
+        errorMessage = "";
+
+        var newFestival = new Festival
+        {
+            Name = $"Festival - {city} {festivalDate:yyyy}",
+            Description = "",
+            Location = $"{city}, {country}",
+            Date = festivalDate,
+            ArtistId = artistId  // ❗ Only send ArtistId, the API will populate `Artist`
+        };
+
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync("http://localhost:5238/api/festivals", newFestival);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/concerts", forceLoad: true);
+            }
+            else
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Failed to submit the festival. API Response: {responseBody}";
+                Console.WriteLine($"API Response: {responseBody}");
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/main");
+    }
+
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string Role { get; set; } = string.Empty;
+    }
+}

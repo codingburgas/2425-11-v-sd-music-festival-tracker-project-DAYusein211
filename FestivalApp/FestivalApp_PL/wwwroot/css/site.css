@@ -120,7 +120,7 @@ article.content.px-4{
     #1A1A1A 20%,
     #171717 40%); 
     transition: background 0.05s linear;
-    position: relative; /* so .lines or any absolutely positioned elements can overlay */
+    position: relative;
 }
 
 /* Optional dotted lines layer */
@@ -393,11 +393,15 @@ article.content.px-4{
 }
 
 .back-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.8rem;
     background-color: #414141;
-    color: #fff;
-    flex: 1;
-    text-align: center;
+    color: white;
+    padding: 0px 1.5rem;
     border: 1px solid #414141;
+    border-radius: 2rem;
+    cursor: pointer;
     transition: 0.2s;
 }
 
@@ -489,7 +493,7 @@ article.content.px-4{
     text-align: center;
     background: linear-gradient(
             to bottom left,
-            #858585 30%,
+            #656565 30%,
             #ffffff 100%
     );
     background-position: var(--gradient-x, 50%) var(--gradient-y, 50%);
@@ -521,7 +525,7 @@ article.content.px-4{
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
     font-weight: 500;
-    color: #414141;
+    color: #747474;
     text-decoration: none;
     transition: color 0.2s ease-in-out;
 }
@@ -536,19 +540,20 @@ article.content.px-4{
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 0.9rem;
-    background-color: white; /* Updated color */
-    color: #414141;               /* keep text white for contrast */
     padding: 0.7rem 1.8rem;
     border-radius: 2rem;
     cursor: pointer;
-    border:1px solid #414141;
+    border:1px solid white;
+    
+    background: none;
+    color: white;
     transition: 0.2s;
 }
 
 .main-arrange-btn:hover {
-    background: none;
-    color: white;
-    border: 1px solid white;
+    color: #414141;
+    background: white;
+    border:1px solid #414141;
 }
 
 /* Content Section */
@@ -695,7 +700,6 @@ article.content.px-4{
     background-color: rgba(255, 255, 255, 0.5);
 }
 
-/* Festival Date */
 .concerts-festival-date {
     font-size: 4rem;
     font-family: 'Montserrat', sans-serif;
@@ -780,4 +784,130 @@ article.content.px-4{
 .concerts-back-icon {
     font-size: 1.2rem;
     padding-right: 0.5rem;
+}
+
+.arrange-form-card {
+    z-index: 2;
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    text-align: center;
+    width: 420px;
+}
+
+.arrange-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    color: #414141;
+}
+
+/* Form Group */
+.arrange-form-group {
+    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.arrange-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #747474;
+}
+
+/* Input Fields */
+.arrange-input {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    border:1px solid #414141;
+    background-color: #F6F6F6;     /* Updated background */
+    /* Updated border */
+    color: #777777;               /* Updated text color */
+    padding: 0.75rem 1rem;
+    border-radius: 0.8rem;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.arrange-input:focus {
+    border-color: #8e4312;
+    background-color: #fff;
+    color: #8e4312;
+    transform: scale(1.02);
+}
+.arrange-input::placeholder{
+    color: #C1C1C1;
+}
+.arrange-input[type="date"], .arrange-input[type="number"] {
+    color: #C1C1C1;
+}
+
+.arrange-input:hover {
+    transform: scale(1.02);
+    border-color: #8e4312;
+    color: #8e4312;
+}
+
+.arrange-form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.half-width {
+    flex: 1;
+}
+
+/* Button Group */
+.arrange-button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    height: 2.5rem;
+}
+
+/* Arrange Button */
+.arrange-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.8rem;
+    background-color: #FF7F2D;
+    color: #414141;
+    padding: 0px 1.5rem;
+    border: 1px solid #414141;
+    border-radius: 2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.arrange-btn:hover {
+    background-color: white;
+    color: #FF7F2D;
+    border: 1px solid #FF7F2D;
+}
+
+/* Go Back Button */
+.arrange-back-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.8rem;
+    background-color: #414141;
+    color: white;
+    padding: 0px 1.5rem;
+    border: 1px solid #414141;
+    border-radius: 2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.arrange-back-btn:hover {
+    background-color: white;
+    color: #414141;
+    border: 1px solid #414141;
 }

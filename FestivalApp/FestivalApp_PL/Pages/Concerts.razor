@@ -27,12 +27,12 @@
                             @( (i + 1) < 10 ? $"0{i + 1}" : $"{i + 1}" ) <!-- Ensures "01, 02, ... 10, 11, 12" -->
                         </div>
                         <div class="concerts-festival-info">
-                            <h3>@festival.Name - @festival.Artist.FirstName @festival.Artist.LastName</h3>
-                            <p>@festival.Location, @festival.Date.ToString("MM-dd-yyyy")</p>
-                            <span class="concerts-rating">@festival.Artist.Rating/5 Rating</span>
+                            <h3>@festival.Name - @festival.ArtistName</h3>
+                            <p>@festival.Location @festival.Date.ToString("MM-dd-yyyy")</p>
+                            <span class="concerts-rating">@festival.ArtistRating/5 Rating</span>
                         </div>
                         <div class="concerts-festival-price">
-                            <p>Price: 200,45$</p>
+                            
                             <button class="concerts-get-btn">GET</button>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
         searchQuery = e.Value?.ToString() ?? "";
         filteredFestivals = festivals
             .Where(f => f.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                        (f.Artist.FirstName + " " + f.Artist.LastName).Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                        f.ArtistName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
             .ToList();
     }
 
@@ -80,13 +80,8 @@
         public string Name { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;
         public DateTime Date { get; set; }
-        public Artist Artist { get; set; } = new Artist();
-    }
-
-    private class Artist
-    {
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public double Rating { get; set; }
+        public int ArtistId { get; set; }
+        public string ArtistName { get; set; } = string.Empty;
+        public double ArtistRating { get; set; }
     }
 }
