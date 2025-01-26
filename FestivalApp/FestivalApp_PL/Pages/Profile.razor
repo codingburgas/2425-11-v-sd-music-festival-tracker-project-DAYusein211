@@ -4,7 +4,7 @@
 
 <!-- Background container -->
 <div class="sign-in-container">
-    <div class="lines" ><div class = "circle-bg"></div></div>
+    <div class="lines user-select-none" ><div class = "circle-bg"></div></div>
 
     <div class="signin-card">
         <div class="header-container with-rating">
@@ -41,7 +41,7 @@
             <label class="label" for="password">Password</label>
             <div class="password-input-wrapper">
                 <input id="password" class="input-field password-field" type="@passwordFieldType" 
-                       value="@DisplayPassword" readonly />
+                       value="@DisplayPassword" readonly disabled />
                 <span class="toggle-visibility" @onclick="TogglePassword">
                     <img src="@CurrentEyeIcon" alt="Show/hide"/>
                 </span>
@@ -51,7 +51,7 @@
         <!-- Buttons -->
         <div class="button-group">
             <button class="back-btn" @onclick="GoBack">Go Back</button>
-            <button class="logout-btn" @onclick="Logout">Log Out</button>
+            <button class="logout-btn" @onclick="Logout">Sign Out</button>
         </div>
     </div>
 </div>
@@ -66,7 +66,7 @@
     private string password = "";
     
     private string passwordFieldType => showPassword ? "text" : "password";
-    private string DisplayPassword => showPassword ? password : "***********"; // Show real password when toggled
+    private string DisplayPassword => showPassword ? password : "***********"; 
     
     private string CurrentEyeIcon => showPassword ? "/icons/closed-eye-icon.svg" : "/icons/eye-icon.svg";
 
@@ -91,13 +91,13 @@
 
     private void GoBack()
     {
-        Navigation.NavigateTo("/");
+        Navigation.NavigateTo("/main");
     }
 
     private async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("loggedInUser");
-        Navigation.NavigateTo("/signin", forceLoad: true);
+        Navigation.NavigateTo("/", forceLoad: true);
     }
 
     private class UserInfo

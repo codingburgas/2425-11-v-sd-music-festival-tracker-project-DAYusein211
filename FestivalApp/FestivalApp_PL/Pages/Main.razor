@@ -1,0 +1,49 @@
+﻿@page "/main"
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<div class="main-page-container">
+    <nav class="main-navbar">
+        <div class="main-nav-links">
+            <a href="/profile" class="main-nav-link">Profile</a>
+            <a href="/concerts" class="main-nav-link">Concerts</a>
+            <a href="/transactions" class="main-nav-link">Transactions</a>
+        </div>
+
+        @if (userRole == "Artist")
+        {
+            <button class="main-arrange-btn">+ Arrange</button>
+        }
+    </nav>
+
+    <div class="main-content">
+        <h1>Plan Your <span class="main-highlight">Perfect</span> Festival Day!</h1>
+        <p class="main-description">
+            Discover your favorite artists, customize your schedule, <br/>
+            and explore the festival map—all in one place.
+        </p>
+    </div>
+</div>
+
+@code {
+    private string userRole = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await LocalStorage.GetItemAsync<UserInfo>("loggedInUser");
+
+        if (user == null)
+        {
+            Navigation.NavigateTo("/signin", forceLoad: true);
+        }
+        else
+        {
+            userRole = user.Role; // Get user role (Guest or Artist)
+        }
+    }
+
+    private class UserInfo
+    {
+        public string Role { get; set; } = string.Empty;
+    }
+}

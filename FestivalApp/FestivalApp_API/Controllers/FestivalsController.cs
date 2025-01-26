@@ -19,7 +19,11 @@ namespace FestivalApp_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Festival>>> GetFestivals()
         {
-            return await _context.Festivals.ToListAsync();
+            var festivals = await _context.Festivals
+                .Include(f => f.Artist) // Include artist details
+                .ToListAsync();
+
+            return Ok(festivals);
         }
 
         [HttpGet("{id}")]

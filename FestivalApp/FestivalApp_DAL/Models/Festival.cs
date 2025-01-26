@@ -18,7 +18,6 @@ namespace FestivalApp_DAL.Models
         [Required]
         public DateTime Date { get; set; }
 
-        // Foreign Key for Artist
         [Required]
         public int ArtistId { get; set; }
 

@@ -5,7 +5,7 @@
 @inject ILocalStorageService LocalStorage
 
 <div class="sign-in-container">
-    <div class="lines" ><div class = "circle-bg"></div></div>
+    <div class="lines"><div class="circle-bg"></div></div>
     <div class="signin-card">
         <h2 class="title">Sign In</h2>
 
@@ -63,6 +63,15 @@
 
     private string CurrentEyeIcon => showPassword ? "/icons/closed-eye-icon.svg" : "/icons/eye-icon.svg";
 
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await LocalStorage.GetItemAsync<UserInfo>("loggedInUser");
+        if (user != null)
+        {
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
+    }
+
     private void TogglePassword()
     {
         showPassword = !showPassword;
@@ -105,7 +114,7 @@
                     Password = password // Store the entered password
                 });
 
-                Navigation.NavigateTo("/", forceLoad: true);
+                Navigation.NavigateTo("/main", forceLoad: true);
             }
         }
         else
@@ -114,9 +123,6 @@
             errorMessage = "Invalid email or password.";
         }
     }
-
-
-
 
     private class UserInfo
     {

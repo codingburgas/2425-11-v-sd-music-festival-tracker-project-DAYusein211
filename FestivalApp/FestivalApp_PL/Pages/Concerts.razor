@@ -1,0 +1,92 @@
+﻿@page "/concerts"
+@inject HttpClient httpClient
+@inject NavigationManager Navigation
+
+<div class="concerts-page-container">
+    <div class="concerts-header">
+        <h1>Plan Your <span class="concerts-highlight">Perfect</span> Festival Day!</h1>
+        <input type="text" class="concerts-search-input" placeholder="Search" @bind="searchQuery" @oninput="FilterFestivals" />
+        <div class="concerts-back-button" @onclick="GoBack">
+            <span class="concerts-back-icon">⬅</span> Back
+        </div>
+    </div>
+
+    <div class="concerts-content">
+        <div class="concerts-festival-list">
+            @if (filteredFestivals.Count == 0)
+            {
+                <p></p>
+            }
+            else
+            {
+                @for (int i = 0; i < filteredFestivals.Count; i++)
+                {
+                    var festival = filteredFestivals[i];
+                    <div class="concerts-festival-card">
+                        <div class="concerts-festival-date">
+                            @( (i + 1) < 10 ? $"0{i + 1}" : $"{i + 1}" ) <!-- Ensures "01, 02, ... 10, 11, 12" -->
+                        </div>
+                        <div class="concerts-festival-info">
+                            <h3>@festival.Name - @festival.Artist.FirstName @festival.Artist.LastName</h3>
+                            <p>@festival.Location, @festival.Date.ToString("MM-dd-yyyy")</p>
+                            <span class="concerts-rating">@festival.Artist.Rating/5 Rating</span>
+                        </div>
+                        <div class="concerts-festival-price">
+                            <p>Price: 200,45$</p>
+                            <button class="concerts-get-btn">GET</button>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Festival> festivals = new();
+    private List<Festival> filteredFestivals = new();
+    private string searchQuery = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            festivals = await httpClient.GetFromJsonAsync<List<Festival>>("http://localhost:5238/api/festivals");
+            filteredFestivals = festivals;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading festivals: {ex.Message}");
+        }
+    }
+
+    private void FilterFestivals(ChangeEventArgs e)
+    {
+        searchQuery = e.Value?.ToString() ?? "";
+        filteredFestivals = festivals
+            .Where(f => f.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                        (f.Artist.FirstName + " " + f.Artist.LastName).Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/main");
+    }
+
+    private class Festival
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Location { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public Artist Artist { get; set; } = new Artist();
+    }
+
+    private class Artist
+    {
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public double Rating { get; set; }
+    }
+}
