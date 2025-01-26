@@ -6,8 +6,7 @@
     <div class="lines" ><div class = "circle-bg"></div></div>
     <div class="signin-card">
         <h2 class="title">Sign Up</h2>
-
-        <!-- First & Last Name -->
+        
         <div class="form-row">
             <div class="form-group half-width">
                 <label class="label" for="firstName">First name</label>
@@ -27,7 +26,6 @@
             </div>
         </div>
 
-        <!-- Email Field -->
         <div class="form-group">
             <label class="label" for="email">Email</label>
             <input id="email"
@@ -38,7 +36,6 @@
                    @oninput="ValidateEmail" />
         </div>
 
-        <!-- Password Field -->
         <div class="form-group password-group">
             <label class="label" for="password">Password</label>
             <div class="password-input-wrapper">
@@ -54,19 +51,16 @@
                 </span>
             </div>
 
-            <!-- Password Warning (Appears Below the Input) -->
             <p class="password-requirement"
                style="display: @(password.Length > 0 && password.Length < 8 ? "block" : "none")">
                 • Must be at least 8 characters
             </p>
         </div>
 
-        <!-- Error Message Box -->
         <div class="error-box" style="display: @(showErrors ? "block" : "none")">
             <p>@errorMessage</p>
         </div>
 
-        <!-- Register As -->
         <p class="register-as-label">Register as</p>
         <div class="register-options">
             <button class="register-btn" @onclick='() => RegisterUser("Guest")'>Guest</button>
@@ -97,7 +91,7 @@
 
     protected override void OnInitialized()
     {
-        httpClient.BaseAddress = new Uri("http://localhost:5238/api/"); // Ensure this matches your API URL
+        httpClient.BaseAddress = new Uri("http://localhost:5238/api/"); 
     }
 
     private void TogglePassword()
@@ -115,7 +109,7 @@
     private void ValidatePassword(ChangeEventArgs e)
     {
         password = e.Value?.ToString() ?? string.Empty;
-        StateHasChanged(); // Ensures UI updates on every input change
+        StateHasChanged(); 
     }
 
     private async Task RegisterUser(string role)
@@ -159,10 +153,10 @@
                 errorMessage = $"{role} registered successfully!";
                 await Task.Delay(2000);
 
-                // Navigate to Sign-In Page
+               
                 Navigation.NavigateTo("/signin", forceLoad: true);
             }
-            else if (response.StatusCode == System.Net.HttpStatusCode.Conflict) // 409 Conflict
+            else if (response.StatusCode == System.Net.HttpStatusCode.Conflict) 
             {
                 showErrors = true;
                 errorMessage = "User with this email already exists.";

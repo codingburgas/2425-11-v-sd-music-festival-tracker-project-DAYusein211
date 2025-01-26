@@ -10,6 +10,11 @@
         <h2 class="arrange-title">Arrange Festival</h2>
 
         <div class="arrange-form-group">
+            <label class="arrange-label" for="festivalName">Festival Name</label>
+            <input id="festivalName" type="text" class="arrange-input" @bind="festivalName" placeholder="Enter festival name" />
+        </div>
+
+        <div class="arrange-form-group">
             <label class="arrange-label" for="festivalDate">Date</label>
             <input id="festivalDate" type="date" class="arrange-input" @bind="festivalDate" />
         </div>
@@ -23,11 +28,6 @@
                 <label class="arrange-label" for="city">City</label>
                 <input id="city" class="arrange-input" type="text" @bind="city" placeholder="New York" />
             </div>
-        </div>
-
-        <div class="arrange-form-group">
-            <label class="arrange-label" for="price">Price</label>
-            <input id="price" class="arrange-input" type="number" min="1" @bind="price" placeholder="Enter price" />
         </div>
 
         @if (!string.IsNullOrEmpty(errorMessage))
@@ -46,9 +46,9 @@
 
 @code {
     private DateTime festivalDate = DateTime.Today;
+    private string festivalName = "";
     private string country = "";
     private string city = "";
-    private decimal price = 0;
     private int artistId;
     private string errorMessage = "";
     private bool isSubmitting = false;
@@ -70,7 +70,7 @@
 
     private async Task SubmitFestival()
     {
-        if (string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city) || price <= 0)
+        if (string.IsNullOrWhiteSpace(festivalName) || string.IsNullOrWhiteSpace(country) || string.IsNullOrWhiteSpace(city))
         {
             errorMessage = "Please fill out all fields correctly.";
             return;
@@ -87,11 +87,11 @@
 
         var newFestival = new Festival
         {
-            Name = $"Festival - {city} {festivalDate:yyyy}",
+            Name = festivalName,
             Description = "",
             Location = $"{city}, {country}",
             Date = festivalDate,
-            ArtistId = artistId  // ❗ Only send ArtistId, the API will populate `Artist`
+            ArtistId = artistId  
         };
 
         try
@@ -100,7 +100,7 @@
 
             if (response.IsSuccessStatusCode)
             {
-                Navigation.NavigateTo("/concerts", forceLoad: true);
+                Navigation.NavigateTo("/main", forceLoad: true);
             }
             else
             {

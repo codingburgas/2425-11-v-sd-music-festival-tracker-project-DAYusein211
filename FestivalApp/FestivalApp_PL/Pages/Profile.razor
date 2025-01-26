@@ -2,7 +2,6 @@
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
-<!-- Background container -->
 <div class="sign-in-container">
     <div class="lines user-select-none" ><div class = "circle-bg"></div></div>
 
@@ -13,12 +12,11 @@
             {
                 <div class="rating-container">
                     <img src="/icons/star.svg" alt="Rating" class="star-icon"/>
-                    <span class="rating-value">@rating.ToString("0.0")/5</span>
+                    <span class="rating-value">@rating.ToString("0.00")/5</span>
                 </div>
             }
         </div>
-
-        <!-- First Name & Last Name -->
+        
         <div class="form-row">
             <div class="form-group half-width">
                 <label class="label" for="firstName">First name</label>

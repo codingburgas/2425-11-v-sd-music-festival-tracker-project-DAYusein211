@@ -65,7 +65,7 @@ namespace FestivalApp_API.Controllers
             }
         }
 
-
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> PutArtist(int id, Artist artist)
         {
@@ -74,6 +74,23 @@ namespace FestivalApp_API.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+        [HttpPut("rating")]
+        public async Task<IActionResult> UpdateArtistRating([FromBody] ArtistRatingUpdateRequest request)
+        {
+            var artist = await _context.Artists.FindAsync(request.ArtistId);
+            if (artist == null)
+            {
+                return NotFound("Artist not found.");
+            }
+
+            // ✅ Simple rating formula: (Previous Rating + New Rating) / 2
+            artist.Rating = (artist.Rating + request.NewRating) / 2.0;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Artist rating updated successfully.", artist.Rating });
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteArtist(int id)
@@ -85,4 +102,9 @@ namespace FestivalApp_API.Controllers
             return NoContent();
         }
     }
+}
+public class ArtistRatingUpdateRequest
+{
+    public int ArtistId { get; set; }
+    public int NewRating { get; set; }
 }

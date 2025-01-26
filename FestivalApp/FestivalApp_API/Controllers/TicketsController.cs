@@ -29,12 +29,56 @@ namespace FestivalApp_API.Controllers
             if (ticket == null) return NotFound();
             return ticket;
         }
+       
+        [HttpGet("user/{guestId}")]
+        public async Task<ActionResult<IEnumerable<object>>> GetUserTickets(int guestId)
+        {
+            var tickets = await _context.Tickets
+                .Where(t => t.GuestId == guestId)
+                .Join(_context.Festivals,
+                    ticket => ticket.FestivalId,
+                    festival => festival.Id,
+                    (ticket, festival) => new
+                    {
+                        ticket.FestivalId,
+                        FestivalName = festival.Name,
+                        FestivalLocation = festival.Location,
+                        FestivalDate = festival.Date,
+                        ArtistId = festival.ArtistId,
+                        ArtistName = _context.Artists
+                            .Where(a => a.Id == festival.ArtistId)
+                            .Select(a => a.FirstName + " " + a.LastName)
+                            .FirstOrDefault(),
+                        ArtistRating = _context.Artists
+                            .Where(a => a.Id == festival.ArtistId)
+                            .Select(a => a.Rating)
+                            .FirstOrDefault()
+                    })
+                .ToListAsync();
+
+            return Ok(tickets);
+        }
 
         [HttpPost]
-        public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
+        public async Task<ActionResult<Ticket>> PostTicket([FromBody] Ticket ticket)
         {
+            // ✅ Ensure the Guest exists
+            var guestExists = await _context.Guests.AnyAsync(g => g.Id == ticket.GuestId);
+            if (!guestExists)
+            {
+                return BadRequest("Guest not found.");
+            }
+
+            // ✅ Ensure the Festival exists
+            var festivalExists = await _context.Festivals.AnyAsync(f => f.Id == ticket.FestivalId);
+            if (!festivalExists)
+            {
+                return BadRequest("Festival not found.");
+            }
+
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetTicket), new { id = ticket.Id }, ticket);
         }
 
@@ -43,6 +87,7 @@ namespace FestivalApp_API.Controllers
         {
             var ticket = await _context.Tickets.FindAsync(id);
             if (ticket == null) return NotFound();
+
             _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return NoContent();

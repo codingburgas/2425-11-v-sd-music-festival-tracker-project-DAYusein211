@@ -1,6 +1,7 @@
 ﻿@page "/concerts"
 @inject HttpClient httpClient
 @inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <div class="concerts-page-container">
     <div class="concerts-header">
@@ -24,16 +25,15 @@
                     var festival = filteredFestivals[i];
                     <div class="concerts-festival-card">
                         <div class="concerts-festival-date">
-                            @( (i + 1) < 10 ? $"0{i + 1}" : $"{i + 1}" ) <!-- Ensures "01, 02, ... 10, 11, 12" -->
+                            @( (i + 1) < 10 ? $"0{i + 1}" : $"{i + 1}" )
                         </div>
                         <div class="concerts-festival-info">
                             <h3>@festival.Name - @festival.ArtistName</h3>
                             <p>@festival.Location @festival.Date.ToString("MM-dd-yyyy")</p>
-                            <span class="concerts-rating">@festival.ArtistRating/5 Rating</span>
+                            <span class="concerts-rating">@festival.ArtistRating.ToString("0.00")/5 Rating</span>
                         </div>
                         <div class="concerts-festival-price">
-                            
-                            <button class="concerts-get-btn">GET</button>
+                            <button class="concerts-get-btn" @onclick="() => BuyTicket(festival.Id)">BUY</button>
                         </div>
                     </div>
                 }
@@ -46,12 +46,33 @@
     private List<Festival> festivals = new();
     private List<Festival> filteredFestivals = new();
     private string searchQuery = "";
+    private int loggedInUserId = 0;
+    private string userRole = "";
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            festivals = await httpClient.GetFromJsonAsync<List<Festival>>("http://localhost:5238/api/festivals");
+            var user = await LocalStorage.GetItemAsync<UserInfo>("loggedInUser");
+            if (user != null)
+            {
+                loggedInUserId = user.Id;
+                userRole = user.Role;
+                
+                if (userRole == "Artist")
+                {
+                    Navigation.NavigateTo("/main", forceLoad: true);
+                    return;
+                }
+            }
+
+            var allFestivals = await httpClient.GetFromJsonAsync<List<Festival>>("http://localhost:5238/api/festivals");
+            
+            var userTickets = await httpClient.GetFromJsonAsync<List<Ticket>>($"http://localhost:5238/api/tickets/user/{loggedInUserId}");
+            
+            var purchasedFestivalIds = userTickets.Select(t => t.FestivalId).ToHashSet();
+
+            festivals = allFestivals.Where(f => !purchasedFestivalIds.Contains(f.Id)).ToList();
             filteredFestivals = festivals;
         }
         catch (Exception ex)
@@ -69,6 +90,48 @@
             .ToList();
     }
 
+    private async Task BuyTicket(int festivalId)
+    {
+        if (loggedInUserId == 0)
+        {
+            Console.WriteLine("User is not logged in.");
+            return;
+        }
+
+        var newTicket = new Ticket
+        {
+            GuestId = loggedInUserId,
+            FestivalId = festivalId
+        };
+
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync("http://localhost:5238/api/tickets", newTicket);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Ticket purchased successfully!");
+
+                festivals.RemoveAll(f => f.Id == festivalId);
+                filteredFestivals.RemoveAll(f => f.Id == festivalId);
+            }
+            else
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Failed to purchase ticket: {responseBody}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error purchasing ticket: {ex.Message}");
+        }
+    }
+
+    private class TicketRequest
+    {
+        public int GuestId { get; set; }
+        public int FestivalId { get; set; }
+    }
+
     private void GoBack()
     {
         Navigation.NavigateTo("/main");
@@ -84,4 +147,17 @@
         public string ArtistName { get; set; } = string.Empty;
         public double ArtistRating { get; set; }
     }
+
+    private class Ticket
+    {
+        public int GuestId { get; set; }
+        public int FestivalId { get; set; }
+    }
+
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string Role { get; set; } = string.Empty;
+    }
 }
+s

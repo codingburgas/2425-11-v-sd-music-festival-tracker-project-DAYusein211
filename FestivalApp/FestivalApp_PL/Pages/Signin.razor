@@ -9,7 +9,7 @@
     <div class="signin-card">
         <h2 class="title">Sign In</h2>
 
-        <!-- Email Field -->
+     
         <div class="form-group">
             <label class="label" for="email">Email</label>
             <input id="email"
@@ -20,7 +20,7 @@
                    @oninput="ValidateEmail" />
         </div>
 
-        <!-- Password Field -->
+      
         <div class="form-group password-group">
             <label class="label" for="password">Password</label>
             <div class="password-input-wrapper">
@@ -35,13 +35,11 @@
                 </span>
             </div>
         </div>
-
-        <!-- Error Message Box -->
+        
         <div class="error-box" style="display: @(showErrors ? "block" : "none")">
             <p>@errorMessage</p>
         </div>
-
-        <!-- Sign In Button -->
+        
         <button class="signin-btn" @onclick="OnSignIn">Sign In</button>
 
         <!-- Sign Up Link -->
@@ -102,7 +100,6 @@
 
             if (userInfo != null)
             {
-                // Store user details INCLUDING the entered password
                 await LocalStorage.SetItemAsync("loggedInUser", new UserInfo
                 {
                     Id = userInfo.Id,

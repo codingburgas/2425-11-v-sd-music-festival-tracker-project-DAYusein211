@@ -1,13 +1,14 @@
 ﻿@page "/main"
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
-
+<div class ="line"></div>
 <div class="main-page-container">
+    
     <nav class="main-navbar">
         <div class="main-nav-links">
             <a href="/profile" class="main-nav-link">Profile</a>
 
-            @if (userRole != "Artist") // Hide Concerts and Transactions for Artists
+            @if (userRole != "Artist") 
             {
                 <a href="/concerts" class="main-nav-link">Concerts</a>
                 <a href="/transactions" class="main-nav-link">Transactions</a>
@@ -42,7 +43,7 @@
         }
         else
         {
-            userRole = user.Role; // Get user role (Guest or Artist)
+            userRole = user.Role; 
         }
     }
 

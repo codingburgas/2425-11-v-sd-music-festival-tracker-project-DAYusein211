@@ -12,9 +12,7 @@ namespace FestivalApp_DAL.Models
         public string PasswordHash { get; set; } = string.Empty;
 
         [Column(TypeName = "float")]
-        public double Rating { get; set; }  // ✅ Ensure consistency with RatingValue
-
-        // Relationships
-        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+        public double Rating { get; set; }  
+        
     }
 }
