@@ -558,7 +558,7 @@ article.content.px-4{
     background: radial-gradient(circle at var(--cursor-x, 50%) var(--cursor-y, 50%),
     rgba(255, 127, 45, 0.75) 0%,
     rgba(255, 127, 45, 0.5) 10%,
-    #ffffff 50%);
+    #ffffff 30%);
     
     transition: background-position 0.2s ease-out;
 
@@ -731,18 +731,31 @@ article.content.px-4{
 
 
 .concerts-back-button {
+    position:absolute;
+    bottom:2rem;
+    left:2rem;
     display: flex;
+    width:50px;
     align-items: center;
     font-size: 1rem;
     font-weight: bold;
     color: #414141;
     cursor: pointer;
-    margin-top: 23rem;
     transition: all 0.2s ease-in-out;
 }
 .tr-back
 {
-    margin-top: 30rem;
+    position:absolute;
+    bottom:2rem;
+    left:2rem;
+    display: flex;
+    width:50px;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #414141;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 }
 .concerts-back-button:hover {
     color: white;
@@ -955,27 +968,6 @@ article.content.px-4{
     border-radius: 2rem;
     cursor: pointer;
     font-size: 0.8rem;
-    background-color: #FF7F2D;
-    color: #414141;
-    flex: 1;
-    border: 1px solid #414141;
-    text-align: center;
-    transition: 0.2s;
-}
-
-.rating-cancel-btn:hover {
-    background: none;
-    border: 1px solid #FF7F2D;
-    color: #FF7F2D;
-}
-
-.rating-submit-btn {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    padding: 0.6rem 0px;
-    border-radius: 2rem;
-    cursor: pointer;
-    font-size: 0.8rem;
     background-color: #414141;
     color: white;
     flex: 1;
@@ -984,9 +976,32 @@ article.content.px-4{
     transition: 0.2s;
 }
 
+.rating-cancel-btn:hover {
+    background: none;
+    border: 1px solid #414141;
+    color: #414141;
+}
+
+.rating-submit-btn {
+    
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    padding: 0.6rem 0px;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    background-color: #FF7F2D;
+    color: #414141;
+    flex: 1;
+    border: 1px solid #414141;
+    text-align: center;
+    transition: 0.2s;
+}
+
 .rating-submit-btn:hover {
     background: none;
-    color: #414141;
+    color: #FF7F2D;
+    border: 1px solid #FF7F2D;
 }
 .line 
 {
